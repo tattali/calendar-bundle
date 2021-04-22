@@ -8,7 +8,14 @@ use DateTimeInterface;
 
 class Event
 {
-    const DATE_FORMAT = 'Y-m-d\\TH:i:s.u\\Z';
+    // 2018-09-01T12:30:00+XX:XX
+    public const DATE_FORMAT_ISO_8601_WITH_OFFSET = 'Y-m-d\\TH:i:sP';
+    // 2018-09-01T12:30:00
+    public const DATE_FORMAT_ISO_8601_WITHOUT_OFFSET = 'Y-m-d\\TH:i:s';
+    // 2018-09-01T12:30:00Z
+    public const DATE_FORMAT_ISO_8601_UTC = 'Y-m-d\\TH:i:s\\Z';
+    // backward compatibility
+    public const DATE_FORMAT = self::DATE_FORMAT_ISO_8601_UTC;
 
     /**
      * @var string
@@ -35,16 +42,23 @@ class Event
      */
     protected $options = [];
 
+    /**
+     * @var string
+     */
+    protected $dateFormat;
+
     public function __construct(
         string $title,
         DateTimeInterface $start,
         ?DateTimeInterface $end = null,
-        array $options = []
+        array $options = [],
+        string $dateFormat = self::DATE_FORMAT_ISO_8601_UTC
     ) {
         $this->setTitle($title);
         $this->setStart($start);
         $this->setEnd($end);
         $this->setOptions($options);
+        $this->setDateFormat($dateFormat);
     }
 
     public function getTitle(): ?string
@@ -133,16 +147,26 @@ class Event
         return $removed;
     }
 
+    public function getDateFormat(): string
+    {
+        return $this->dateFormat;
+    }
+
+    public function setDateFormat(string $dateFormat): void
+    {
+        $this->dateFormat = $dateFormat;
+    }
+
     public function toArray(): array
     {
         $event = [
             'title' => $this->getTitle(),
-            'start' => $this->getStart()->format(self::DATE_FORMAT),
+            'start' => $this->getStart()->format($this->getDateFormat()),
             'allDay' => $this->isAllDay(),
         ];
 
         if (null !== $this->getEnd()) {
-            $event['end'] = $this->getEnd()->format(self::DATE_FORMAT);
+            $event['end'] = $this->getEnd()->format($this->getDateFormat());
         }
 
         return array_merge($event, $this->getOptions());

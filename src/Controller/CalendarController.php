@@ -38,9 +38,10 @@ class CalendarController
         $end = new \DateTime($request->get('end'));
         $filters = $request->get('filters', '{}');
         $filters = \is_array($filters) ? $filters : json_decode($filters, true);
+        $timezone = $request->get('timeZone');
 
         $event = $this->dispatchWithBC(
-            new CalendarEvent($start, $end, $filters),
+            new CalendarEvent($start, $end, $filters, $timezone),
             CalendarEvents::SET_DATA
         );
         $content = $this->serializer->serialize($event->getEvents());

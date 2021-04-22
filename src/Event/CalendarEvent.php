@@ -35,14 +35,21 @@ class CalendarEvent extends BaseEvent
      */
     protected $events = [];
 
+    /**
+     * @var string|null
+     */
+    private $timezone;
+
     public function __construct(
         DateTimeInterface $start,
         DateTimeInterface $end,
-        array $filters
+        array $filters,
+        ?string $timezone = null
     ) {
         $this->start = $start;
         $this->end = $end;
         $this->filters = $filters;
+        $this->timezone = $timezone;
     }
 
     public function getStart(): DateTimeInterface
@@ -75,5 +82,10 @@ class CalendarEvent extends BaseEvent
     public function getEvents(): array
     {
         return $this->events;
+    }
+
+    public function getTimezone(): ?string
+    {
+        return $this->timezone;
     }
 }

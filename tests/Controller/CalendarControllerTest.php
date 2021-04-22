@@ -44,6 +44,7 @@ class CalendarControllerTest extends TestCase
         $this->request->get('start')->willReturn('2016-03-01');
         $this->request->get('end')->willReturn('2016-03-19 15:11:00');
         $this->request->get('filters', '{}')->willReturn('{}');
+        $this->request->get('timeZone')->willReturn(null);
 
         $this->calendarEvent->getEvents()->willReturn([$this->event]);
 
@@ -81,6 +82,7 @@ class CalendarControllerTest extends TestCase
         $this->request->get('start')->willReturn('2016-03-01');
         $this->request->get('end')->willReturn('2016-03-19 15:11:00');
         $this->request->get('filters', '{}')->willReturn('{}');
+        $this->request->get('timeZone')->willReturn(null);
 
         $this->calendarEvent->getEvents()->willReturn([$this->event]);
         $this->eventDispatcherWithBC(Argument::type(CalendarEvent::class), CalendarEvents::SET_DATA);
